@@ -36,12 +36,12 @@ namespace AdverstingPlatforms.Controllers
         {
             try
             {
-                var (result,exception) = _service.FindPlatforms(pathDto.path);
+                var (result,exception) = _service.FindPlatforms(pathDto.location);
                 return Ok(new { Data = result, Error = exception?.Message });
             }
             catch (ArgumentNullException)
             {
-                return NotFound($"Платформы по запросу {pathDto.path} не найдены");
+                return NotFound($"Платформы по запросу {pathDto.location} не найдены");
             }
             catch (ArgumentException ex)
             {
