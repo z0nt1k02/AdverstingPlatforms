@@ -2,7 +2,7 @@
 {
     public interface IAdverstingPlatformsService
     {
-        Task<Dictionary<string, List<string>>> UpdatePlatformsAsync();
-        HashSet<string> FindPlatforms(string path);
+        Task<Dictionary<string, HashSet<string>>> UpdatePlatformsAsync();
+        (HashSet<string>, Exception? ex) FindPlatforms(string path);
     }
 }

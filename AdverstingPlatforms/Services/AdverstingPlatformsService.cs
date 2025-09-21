@@ -7,14 +7,14 @@ namespace AdverstingPlatforms.Services
     public class AdverstingPlatformsService : IAdverstingPlatformsService
     {
         private readonly IConfiguration _configuration;
-        private Dictionary<string, List<string>> AdverstingPlatforms = new Dictionary<string, List<string>>();
+        private Dictionary<string, HashSet<string>> AdverstingPlatforms = new Dictionary<string, HashSet<string>>();
         
         public AdverstingPlatformsService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
-        public async Task<Dictionary<string,List<string>>> UpdatePlatformsAsync()
+        public async Task<Dictionary<string,HashSet<string>>> UpdatePlatformsAsync()
         {
             List<string> lines = new List<string>();
             try
@@ -30,10 +30,10 @@ namespace AdverstingPlatforms.Services
                         {
                             string key = s.Substring(0, colonIndex);
                             string value = s.Substring(colonIndex + 1);
-                            List<string> values = value.Split(',')
+                            HashSet<string> values = value.Split(',')
                                         .Select(v => v.Trim())
                                         .Where(v => !string.IsNullOrEmpty(v))
-                                        .ToList();
+                                        .ToHashSet();
 
                             AdverstingPlatforms[key] = values;
                         }
@@ -47,7 +47,7 @@ namespace AdverstingPlatforms.Services
             return AdverstingPlatforms!;
         }    
 
-        public HashSet<string> FindPlatforms(string path)
+        public (HashSet<string>,Exception? ex) FindPlatforms(string path)
         {
             if (AdverstingPlatforms == null || AdverstingPlatforms.Count == 0)           
                 throw new InvalidOperationException("Данные о платформах отсутствуют.Пожалуйста загрузите данные");
@@ -55,20 +55,23 @@ namespace AdverstingPlatforms.Services
             if (string.IsNullOrEmpty(path))           
                 throw new ArgumentException("Путь не может быть пустым");
 
-            HashSet<string> result = FindPlatformsByPath(path);
+            var (result,error) = FindPlatformsByPath(path);
+            
+                
                         
             if(result.Count == 0)
                 throw new ArgumentNullException("Платформы по текущему запросу ну найдены");
             
-            return result;
+            return (result, error);
         } 
 
-        private HashSet<string> FindPlatformsByPath(string path)
+        private (HashSet<string>,Exception? ex) FindPlatformsByPath(string path)
         {
             HashSet<string> result = new HashSet<string>();
             string[] pathParts = path.Split('/');
             string currentPath = "";
-
+            bool exists = AdverstingPlatforms.Values.Any(set => set.Contains(path));
+            
             for (int i = 1; i < pathParts.Length; i++)
             {
                 currentPath += "/" + pathParts[i];
@@ -77,12 +80,16 @@ namespace AdverstingPlatforms.Services
                         .Where(kvp => kvp.Value.Contains(currentPath))
                         .Select(kvp => kvp.Key)
                         .ToList();
+                if (platforms.Count == 0)
+                {
+                    return (result, new Exception($"Регион {pathParts[i]} не найден.Показаны ближайшие результаты"));                   
+                }
                 foreach (string platform in platforms)
                 {
                     result.Add(platform);
                 }
             }
-            return result;
+            return (result,null);
         }
         
        

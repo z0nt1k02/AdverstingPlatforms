@@ -36,8 +36,8 @@ namespace AdverstingPlatforms.Controllers
         {
             try
             {
-                var result = _service.FindPlatforms(pathDto.path);
-                return Ok(result);
+                var (result,exception) = _service.FindPlatforms(pathDto.path);
+                return Ok(new { Data = result, Error = exception?.Message });
             }
             catch (ArgumentNullException)
             {
