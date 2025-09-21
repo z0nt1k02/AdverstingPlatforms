@@ -1,0 +1,17 @@
+Яндекс.Директ:/ru
+Ревдинский рабочий:/ru/svrd/revda,/ru/svrd/pervik
+Газета уральских москвичей:/ru/msk,/ru/permobl,/ru/chelobl
+Крутая реклама:/ru/svrd
+Московский вестник:/ru/msk/center,/ru/msk/south
+Питерский экспресс:/ru/spb/center,/ru/spb/vasileostrovskiy
+Уральские новости:/ru/ekb,/ru/ekb/center
+Сибирский курьер:/ru/nsb,/ru/omsk
+Золотое кольцо:/ru/vladimir,/ru/yaroslavl
+Казанские известия:/ru/kazan,/ru/tatarstan
+Нижегородский глас:/ru/nnov,/ru/nnov/avtozavodskiy
+Самарский наблюдатель:/ru/samara,/ru/samara/industrialniy
+Ростовский курьер:/ru/rostov,/ru/rostov/center
+Волгоградские вести:/ru/vlg,/ru/vlg/centralniy
+Краснодарские новости:/ru/krasnodar,/ru/krasnodar/center
+Пермский край:/ru/perm,/ru/perm/ordzhonikidzevskiy
+Новосибирский экспресс:/ru/nsb/leninskiy,/ru/nsb/kirovskiy
