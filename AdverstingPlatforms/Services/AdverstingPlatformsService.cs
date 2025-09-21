@@ -16,6 +16,7 @@ namespace AdverstingPlatforms.Services
 
         public async Task<Dictionary<string,HashSet<string>>> UpdatePlatformsAsync()
         {
+            AdverstingPlatforms.Clear();
             List<string> lines = new List<string>();
             try
             {
