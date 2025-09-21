@@ -2,6 +2,7 @@
 using AdverstingPlatforms.Interfaces;
 using AdverstingPlatforms.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdverstingPlatforms.Controllers
@@ -10,38 +11,49 @@ namespace AdverstingPlatforms.Controllers
     [ApiController]
     public class AdverstingPlatformsController : ControllerBase
     {
-        private readonly AdverstingPlatformsService _service;
-        public AdverstingPlatformsController(AdverstingPlatformsService service)
+        private readonly IAdverstingPlatformsService _service;
+        public AdverstingPlatformsController(IAdverstingPlatformsService service)
         {
             _service = service;
         }
 
-        [HttpGet]
-        [Route("update")]
+        [HttpGet]        
         public async Task<IActionResult> UpdatePlatforms()
-        {
-            var result = await _service.UpdatePlatforms();
-            return Ok(result);
-        }
-        [HttpGet]
-        public IActionResult GetPlatforms()
-        {
-            var result = _service.GetPlatforms();
-            return Ok(result);
-        }
-
-        [HttpPost]
-        public IActionResult GetPlatforms(PathDto dto)
         {
             try
             {
-                var result = _service.FindPlatforms(dto.path);
-                return Ok(result);
+                var result = await _service.UpdatePlatformsAsync();
+                return Ok("Данные успешно загружены");
             }
             catch(Exception ex)
             {
-                return Ok(ex.Message);
+                return Problem(statusCode: 500, detail: ex.Message,title:"Произошла ошибка при загрузке данных с файла");
+            }            
+        }
+
+        [HttpPost]
+        public IActionResult GetPlatforms(PathDto pathDto)
+        {
+            try
+            {
+                var result = _service.FindPlatforms(pathDto.path);
+                return Ok(result);
             }
+            catch (ArgumentNullException)
+            {
+                return NotFound($"Платформы по запросу {pathDto.path} не найдены");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
+            
+
         }
     }
 }

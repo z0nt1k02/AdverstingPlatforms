@@ -15,7 +15,7 @@ namespace AdverstingPlatforms
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
-            builder.Services.AddSingleton<AdverstingPlatformsService>();
+            builder.Services.AddSingleton<IAdverstingPlatformsService,AdverstingPlatformsService>();
 
             var app = builder.Build();
 
